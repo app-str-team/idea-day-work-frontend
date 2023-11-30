@@ -4,17 +4,19 @@ import firebase
 from flet import *
 from main import _moduleList
 from datetime import datetime
+import os
+import json
 
+__location__ = os.path.realpath(
+    os.path.join(os.getcwd(), os.path.dirname(__file__)))
+config_file = os.path.join(__location__, 'connectionstring.json')
 
-CONFIG = {
-  "apiKey": "AIzaSyBfH4d5A6rc8lcM6AMmSmf4lRQQfbAzenQ",
-  "authDomain": "flet-cb-mobileapp.firebaseapp.com",
-  "projectId": "flet-cb-mobileapp",
-  "storageBucket": "flet-cb-mobileapp.appspot.com",
-  "messagingSenderId": "896214009084",
-  "appId": "1:896214009084:web:4e765eab897d12146dc379",
-  "databaseURL": "https://flet-cb-mobileapp-default-rtdb.asia-southeast1.firebasedatabase.app/",
-}
+CONFIG = {}
+
+with open(config_file, 'r') as f:
+    CONFIG = json.load(f)
+    
+print(CONFIG)
 
 global SESSION
 SESSION = {}
@@ -40,9 +42,15 @@ def ChangeRoute(e, page_route):
             _moduleList[page_route].loader.load_module()._view_()
         )
         e.page.go("/login")
-        e.page.go("/register")
+        # e.page.go("/register")
     else:
         pass
+
+    if page_route == "/postComments":
+        e.page.views.append(
+            _moduleList[page_route].loader.load_module()._view_()
+        )
+        e.page.go("/postComments")
     
     e.page.update()
 
@@ -66,7 +74,7 @@ def RegisterUser(e):
                     "firstName" : res.controls[0].content.value,
                     "lastName" : res.controls[1].content.value,
                     "email" : res.controls[2].content.value,
-                    # "password" : res.controls[3].content.value,
+                    "password" : res.controls[3].content.value,
                 }
 
                 db.child("users").push(data)
@@ -94,6 +102,7 @@ def ShowMenu(e):
                 page.controls[0].controls[0].controls[0].controls[0].width = 60
                 page.update()
 
+# logIn in App
 def logInUser(e):
     print("Inside LoginUser")
     first_name, last_name = GetUserDetail(e)
@@ -101,13 +110,17 @@ def logInUser(e):
 
     if first_name != None and last_name != None:
         e.page.views.clear()
-        e.page.views.append( _moduleList['/home'].loader.load_module()._view_(first_name, last_name) )
+        e.page.views.append( _moduleList['/home'].loader.load_module()._view_() )
         e.page.go('/home')
         e.page.update()
     else:
         print("EmailID and Password is Wrong..!!")
-        
 
+
+# def LogOutUser(e):
+#     e.page.SESSION.clear()
+#     e.page.go('/login') 
+#     e.page.update()
 
 def GetUserDetail(e):
     print("Inside GetUserDetails")
@@ -141,5 +154,79 @@ def GetUserDetail(e):
             except Exception as ex:
                 print(ex)
     print("No matching Email...")
-    return None
-    
+    return [None, None]
+
+# This function is for to post the judges comments on firebase.
+def PostJudgeScore(e):
+    for page in e.page.views[:]:
+        if page.route == '/postComments':
+            res = page.controls[0].controls[0].content.controls[4]
+            print(type(res))
+            try:
+                # print(
+                #     res.controls[0].content.value,
+                #     res.controls[1].content.value,
+                #     res.controls[2].content.value,
+                #     res.controls[3].content.value,
+                #     res.controls[4].content.value,
+                #     res.controls[5].content.value,
+                # )
+
+                judgeData = {
+                    "ideaPitch":res.controls[0].content.value,
+                    "efficiencyValue":res.controls[1].content.value,
+                    "featureScope":res.controls[2].content.value,
+                    "presentation":res.controls[3].content.value,
+                    "workingModel":res.controls[4].content.value,
+                    "judgeComment":res.controls[5].content.value,
+                }
+
+                db.child('judgesComments').push(judgeData)
+                e.page.views.clear()
+                e.page.views.append(
+                _moduleList['/postComments'].loader.load_module()._view_())
+                e.page.update()
+            
+            except Exception as ex:
+                print(ex)
+
+def homePage(e):
+        e.page.views.clear()
+        e.page.views.append( _moduleList['/home'].loader.load_module()._view_() )
+        e.page.go('/home')
+        e.page.update()
+  
+# User ability to post comment
+# def PostText(e, first_name:str, last_name:str):
+#     post_date = datetime.now().strftime("%b %d, %y %I:%M")
+
+#     for page in e.page.views[:]:
+#         if page.route =='/home':
+#             res = page.controls[0].controls[0].controls[2].controls[3].controls[0]
+
+#             # here we set the data in dict
+#             data = {
+#                 "firstName" : first_name,
+#                 "lastName" : last_name,
+#                 "postDate" : post_date,
+#                 "comment" : res.content.controls[0].content.value,
+#             }
+
+#             ref_data = (
+#                 db.child("users"+"/"+SESSION["path"]).child("comments").push(data)
+#             )
+#             # .child("comments") will create a new table
+
+#             page.controls[0].controls[0].controls[2].controls[3].controls.append(
+#                 postComment.DisplayPost(
+#                     first_name,
+#                     last_name,
+#                     post_date,
+#                     res.content.controls[0].content.value,
+#                     ref_data['name'],
+#                 )
+#             )
+
+#             res.content.controls[0].content.value = None
+#             res.content.controls[0].content.update()
+#             e.page.update()

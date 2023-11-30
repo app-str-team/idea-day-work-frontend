@@ -1,9 +1,10 @@
 
 from flet import *
+from view import ChangeRoute
 
 class ModernNavbar(UserControl):
     def __init__(self):
-
+        
         super().__init__()
 
     def ContainedIcon(self, icon_name, text):
@@ -47,10 +48,40 @@ class ModernNavbar(UserControl):
                 horizontal_alignment=CrossAxisAlignment.START,
                 spacing=5,
                 controls=[
-                    self.ContainedIcon(icons.HOME_FILLED, "Home"),
-                    self.ContainedIcon(icons.DASHBOARD_ROUNDED, "Dashboard"),
+                    # self.ContainedIcon(icons.HOME_FILLED, "Home"),
+                    # self.ContainedIcon(icons.DASHBOARD_ROUNDED, "Dashboard",),
+                    Container(
+                                on_click= lambda e: None,
+                                    # ChangeRoute(e,"/home"),
+                                content=Text(
+                                    "HOME",
+                                    color="orange900",
+                                    size=10,
+                                    weight="bold",
+                                ),
+                            ),
+                    Container(
+                         on_click= lambda e: ChangeRoute(e, "/postComments"),
+                                content=Text(
+                                    "DASHBOARD",
+                                    color="orange900",
+                                    size=10,
+                                    weight="bold",
+                                ),
+                    ),
+                               
+
                     Divider(color="whitw", height=7),
-                    self.ContainedIcon(icons.LOGOUT_ROUNDED, "Logout")
+                    # self.ContainedIcon(icons.LOGOUT_ROUNDED, "Logout"),
+                    Container(
+                        on_click= lambda e: ChangeRoute(e, "/login"),
+                        content=Text(
+                                    "LOGOUT",
+                                    color="orange900",
+                                    size=10,
+                                    weight="bold",
+                        ),
+                    ),
                 ],
             ),
         )

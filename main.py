@@ -20,9 +20,7 @@ for _, dirs, __ in os.walk(r'./'):
 
 def main(page:Page):
     page.title = 'Idea-Day CB India'
-    # page.views.append(
-    #     _moduleList['/login'].loader.load_module()._view_()
-    # )
+
     page.views.append(
         _moduleList['/login'].loader.load_module()._view_()
     )

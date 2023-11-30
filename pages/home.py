@@ -3,7 +3,7 @@ from controls import navbar
 from view import ShowMenu
 
 
-def _view_(first_name:str, last_name:str):
+def _view_():
     return View(
         '/home',
         bgcolor="white54",
@@ -25,7 +25,7 @@ def _view_(first_name:str, last_name:str):
                                         animate=animation.Animation(350,"decelerate"),
                                         on_hover= lambda e: ShowMenu(e),
                                         content=navbar.ModernNavbar(),
-                                    )
+                                    ),
                                 ],
                             ),
                             VerticalDivider(width=60, color='transparent'),
@@ -35,7 +35,12 @@ def _view_(first_name:str, last_name:str):
                                 horizontal_alignment=CrossAxisAlignment.CENTER,
                                 controls=[
                                     Divider(height=30, color='transparent'),
-                                ]
+
+                                    Divider(height=30, color="transparent"),
+                                    Column(
+                                        expand=True, scroll="hidden"
+                                    ),
+                                ],
                             ),
                         ],
                     ),

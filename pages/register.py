@@ -39,10 +39,10 @@ def _view_():
                                 Column(
                                     spacing=5,
                                     controls=[
-                                        inputText.InputetextField("First Name", False),
-                                        inputText.InputetextField("Last Name", False),
-                                        inputText.InputetextField("Email", False),
-                                        inputText.InputetextField("Password", True),
+                                        inputText.InputetextField("First Name", False,False),
+                                        inputText.InputetextField("Last Name", False,False),
+                                        inputText.InputetextField("Email", False,False),
+                                        inputText.InputetextField("Password", True,True),
                                     ],
                                 ),
                                 Row(
@@ -59,7 +59,7 @@ def _view_():
                                 ),
                                 Divider(height=5, color="transparent"),
 
-                                inputText.SignInOption( "Sign uP", 
+                                inputText.SignInOption( "Sign Up", 
                                                        lambda e: RegisterUser(e)
                                                        ),
                                 Divider(height=60, color="transparent"),

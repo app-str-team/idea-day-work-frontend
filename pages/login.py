@@ -40,8 +40,8 @@ def _view_():
                                 Column(
                                     spacing=5,
                                     controls=[
-                                        inputText.InputetextField("Email", False),
-                                        inputText.InputetextField("Password", True),
+                                        inputText.InputetextField("Email", False, False),
+                                        inputText.InputetextField("Password", True, True),
                                     ],
                                 ),
                                 Row(
@@ -73,7 +73,7 @@ def _view_():
                                         Container(
                                             on_click= lambda e: ChangeRoute(e, "/register"),
                                             content=Text(
-                                                "Sign in",
+                                                "Sign In",
                                                 color="blue900",
                                                 size=10,
                                                 weight="bold",
