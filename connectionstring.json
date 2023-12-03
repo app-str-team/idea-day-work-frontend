@@ -1,0 +1,10 @@
+{
+  "apiKey": "AIzaSyAmFTaQhnyDPMAHvepnBgSpnyjSFgiOuVI",
+  "authDomain": "app-str-team.firebaseapp.com",
+  "databaseURL": "https://app-str-team-default-rtdb.asia-southeast1.firebasedatabase.app",
+  "projectId": "app-str-team",
+  "storageBucket": "app-str-team.appspot.com",
+  "messagingSenderId": "1002347207689",
+  "appId": "1:1002347207689:web:e3f26902b2fc1608fdacd8",
+  "database" : "https://app-str-team-default-rtdb.asia-southeast1.firebasedatabase.app/"
+}
