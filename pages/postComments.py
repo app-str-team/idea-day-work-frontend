@@ -1,6 +1,10 @@
+from threading import activeCount
 from flet import *
 from controls import inputTextField
-from view import PostJudgeScore,homePage
+from view import PostJudgeScore,homePage, goToPreviousPage
+
+from common import usersession
+from controls import IdeaDayTeam
 
 def _view_(page : Page):
     return View(
@@ -39,21 +43,15 @@ def _view_(page : Page):
                                 Divider(height=11, color="transparent"),
                                 Column(
                                     spacing=5,
-                                    controls=[
-                                        inputTextField.InputtextField("Idea Pitch","Enter the Score between 1-15"),
-                                        inputTextField.InputtextField("Efficiency value","Enter the Score between 1-35"),
-                                        inputTextField.InputtextField("Feature Scope","Enter the Score between 1-10"),
-                                        inputTextField.InputtextField("Working Model","Enter the Score between 1-30"),
-                                        inputTextField.InputtextField("Presentation","Enter the Score between 1-10"),
-                                        inputTextField.MultitextField("Comment","Enter Your comment here"),
-                                    ],
+                                    controls= [inputTextField.InputtextField(x,"Enter the Score between 1-10") for x in usersession.SESSION['active_session']['fieldsforjudgement']] +
+                                              [inputTextField.MultitextField("Comment","Enter Your comment here")]
                                 ),
 
                                 # Divider(height=5, color="transparent"),
 
                                 inputTextField.SignInOption( "POST JUDGEMENT", lambda e: PostJudgeScore(e)),
                                 Divider(height=5, color="transparent"),
-                                inputTextField.SignInOption( "BACK", lambda e: homePage(e)),
+                                inputTextField.SignInOption( "BACK", lambda e: goToPreviousPage(e)),
                                 Divider(height=5, color="transparent"),
                             ],
                         ),

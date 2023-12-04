@@ -1,12 +1,10 @@
-# import pyrebase
-#import firebase
-# from collections.abc import Mapping
+
 from flet import *
 from main import _moduleList
 from datetime import datetime
-#import os
 import json
 import requests
+from common import usersession
 
 '''
 __location__ = os.path.realpath(
@@ -19,11 +17,11 @@ with open(config_file, 'r') as f:
     CONFIG = json.load(f)
     
 print(CONFIG)
-'''
+
 global SESSION
 SESSION = {}
 
-'''
+
 firebase = firebase.initialize_app(CONFIG)
 auth = firebase.auth()
 db = firebase.database()
@@ -159,10 +157,11 @@ def GetUserDetail(e):
                         'uid': resp.json()['localId'] ,
                         'idToken': resp.json()['idToken'],
                         'userRole':resp.json()['userRole'] }
+                        
+                usersession.SESSION['active_session'] = user
                 
                 print("userRole =", resp.json()['userRole'])
                 
-                SESSION["users"] = user
 
                 return user['displayName'], user['uid']
                 '''
@@ -192,33 +191,43 @@ def PostJudgeScore(e):
             res = page.controls[0].controls[0].content.controls[4]
             print(type(res))
             try:
-                # print(
-                #     res.controls[0].content.value,
-                #     res.controls[1].content.value,
-                #     res.controls[2].content.value,
-                #     res.controls[3].content.value,
-                #     res.controls[4].content.value,
-                #     res.controls[5].content.value,
-                # )
-
                 judgeData = {
-                    "ideaPitch":res.controls[0].content.value,
-                    "efficiencyValue":res.controls[1].content.value,
-                    "featureScope":res.controls[2].content.value,
-                    "presentation":res.controls[3].content.value,
-                    "workingModel":res.controls[4].content.value,
-                    "judgeComment":res.controls[5].content.value,
+                    res.controls[0].content.label:res.controls[0].content.value,
+                    res.controls[1].content.label:res.controls[1].content.value,
+                    res.controls[2].content.label:res.controls[2].content.value,
+                    res.controls[3].content.label:res.controls[3].content.value,
+                    res.controls[4].content.label:res.controls[4].content.value,
+                    res.controls[5].content.label:res.controls[5].content.value,
+                    'id':usersession.SESSION['active_session']['selectedIdeaID'],
+                    'judge_uid':usersession.SESSION['active_session']['uid']
                 }
-
-                db.child('judgesComments').push(judgeData)
+                response = requests.post(url="http://127.0.0.1:5000/postscore",
+                            json = judgeData,
+                         headers={"Content-Type":"application/json"})
+                '''
                 e.page.views.clear()
                 e.page.views.append(
-                _moduleList['/postComments'].loader.load_module()._view_())
+                _moduleList['/postComments'].loader.load_module()._view_(e.page))
                 e.page.update()
-            
+                '''
+                if (response.json()['status'] == 'OK'):
+                    e.page.snack_bar = SnackBar(Text(f"Successfully posted the judgement. Taking back to ideas" ))
+                else:
+                    e.page.snack_bar = SnackBar(Text(f"Some error occured while submitting the judgement" ))
+                e.page.snack_bar.open = True  
+                
+                e.page.update()    
+    
+                goToPreviousPage(e)    
+                
             except Exception as ex:
                 print(ex)
 
+def goToPreviousPage(e):
+    e.page.views.pop()
+    top_view = e.page.views[-1]
+    e.page.go(top_view.route)
+    
 def homePage(e):
         e.page.views.clear()
         e.page.views.append( _moduleList['/home'].loader.load_module()._view_(e.page) )

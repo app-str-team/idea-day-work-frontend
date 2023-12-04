@@ -9,6 +9,7 @@ import json
 tool_tip_keeper = {} 
 
 class IdeaDayApp(UserControl):
+    
     def build(self):
         listCUSTOMERDELIGHT = []
         listTECHBIZCATEGORY = []

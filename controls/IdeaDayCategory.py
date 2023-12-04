@@ -5,14 +5,26 @@ from main import _moduleList
 from controls  import IdeaDayApp
 
 import requests
+from common import usersession
 
 
-def get_idea_id(idea_category:str, tooltip : int):
+def get_idea_id_and_fields(idea_category:str, tooltip : int):
     print("idea_category = ", idea_category)
     print("tooltip = ", tooltip)
     tool_tips = IdeaDayApp.tool_tip_keeper[idea_category]
     selected_ideaID = tool_tips[tooltip]
     print(selected_ideaID)
+    idea_categories = requests.get('http://127.0.0.1:5000/ideacategory')
+
+    required_idea_category = None
+    if idea_category in idea_categories.json().keys():
+        required_idea_category = idea_categories.json()[idea_category]
+    fields_for_form = []
+    for k,v in required_idea_category.items():
+        if type(v) is int:
+            fields_for_form.append(k)
+    
+    return selected_ideaID, fields_for_form
     
 class IdeaDayCategory(UserControl):
     # def __init__(self, task_name, start):
@@ -48,10 +60,8 @@ class IdeaDayCategory(UserControl):
         self.start = 0
 
 
-
     def example(self):
         def on_click(e):
-            print ("e =", e.__dict__)
             step = e.page.controls[0].controls[0].controls[0]
             step.controls[0].visible = False
             step.controls[1].visible = False
@@ -67,6 +77,7 @@ class IdeaDayCategory(UserControl):
             if (e.control.data == "customer_delight"):
                 IdeaDayParameter = IdeaDayCategory.customerDelight_Task_List[e.control.tooltip]
 
+            print("step.controls[2] = ", step.controls[2])
             step.controls[2].controls.append(IdeaDayTeam.IdeaDayTeam(IdeaDayParameter))
             step.controls[2].update()
             step.controls[2].visible = True
@@ -74,8 +85,11 @@ class IdeaDayCategory(UserControl):
             print(
                 "I am working"
             )
-            print ("e.control.data = ", e.control.data)
-            ideaID = get_idea_id(e.control.data, e.control.tooltip);
+            
+            ideaID, fields_for_judegment_form = get_idea_id_and_fields(e.control.data, e.control.tooltip)
+
+            usersession.SESSION['active_session']['selectedIdeaID'] = ideaID
+            usersession.SESSION['active_session']['fieldsforjudgement'] = fields_for_judegment_form
             e.page.update()
 
         images = flet.GridView(

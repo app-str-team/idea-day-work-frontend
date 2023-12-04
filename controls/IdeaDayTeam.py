@@ -2,6 +2,7 @@ import flet
 from flet import *
 import requests
 from main import _moduleList
+from common import usersession
 
 class IdeaDayTeam(UserControl):
     def loadTeam(self):
@@ -14,10 +15,13 @@ class IdeaDayTeam(UserControl):
 
             step.update()
         def on_submit_opinion_clicked(e):
-            print ("on_submit_opinion_clicked")
-            e.page.views.clear()
-            e.page.views.append(
-            _moduleList['/postComments'].loader.load_module()._view_(e.page))
+            if(usersession.SESSION['active_session']['userRole'] == 'Judge'):
+                controls = e.page.controls
+                e.page.views.append(
+                _moduleList['/postComments'].loader.load_module()._view_(e.page))
+                e.page.go('/postComments')
+            elif(usersession.SESSION['active_session']['userRole'] == 'admin'):
+                pass
             e.page.update()
             
         return Column(controls=[
