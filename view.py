@@ -51,7 +51,7 @@ def ChangeRoute(e, page_route):
             _moduleList[page_route].loader.load_module()._view_()
         )
         e.page.go("/postComments")
-    
+
     e.page.update()
 
 # Create a User using Registration form
@@ -69,7 +69,7 @@ def RegisterUser(e):
                     res.controls[2].content.value,
                     res.controls[3].content.value,
                 )
-
+                
                 data = {
                     "firstName" : res.controls[0].content.value,
                     "lastName" : res.controls[1].content.value,
@@ -110,7 +110,7 @@ def logInUser(e):
 
     if first_name != None and last_name != None:
         e.page.views.clear()
-        e.page.views.append( _moduleList['/home'].loader.load_module()._view_() )
+        e.page.views.append( _moduleList['/home'].loader.load_module()._view_(e.page) )
         e.page.go('/home')
         e.page.update()
     else:

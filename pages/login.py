@@ -4,7 +4,7 @@ from controls import inputText
 from view import ChangeRoute,logInUser
 
 
-def _view_():
+def _view_(page : Page):
     return View(
         "/login",
         bgcolor='#fafafa',

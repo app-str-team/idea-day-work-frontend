@@ -2,7 +2,7 @@ from flet import *
 from controls import inputTextField
 from view import PostJudgeScore,homePage
 
-def _view_():
+def _view_(page : Page):
     return View(
         "/postComments",
         bgcolor='#fafafa',

@@ -3,7 +3,7 @@ from flet import *
 from controls import inputText
 from view import ChangeRoute, RegisterUser
 
-def _view_():
+def _view_(page : Page):
     return View(
         "/register",
         bgcolor='#fafafa',

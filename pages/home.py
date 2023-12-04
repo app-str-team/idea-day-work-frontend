@@ -1,9 +1,10 @@
 from flet import *
 from controls import navbar
 from view import ShowMenu
+from controls import IdeaDayApp
 
-
-def _view_():
+'''
+def _view_(page : Page):
     return View(
         '/home',
         bgcolor="white54",
@@ -47,4 +48,14 @@ def _view_():
                 ],
             ),
         ],
+    )
+'''   
+
+def _view_(page : Page):
+    control = IdeaDayApp.IdeaDayApp()
+    page.add(control)
+    return View(    
+        vertical_alignment=MainAxisAlignment.CENTER,
+        horizontal_alignment = CrossAxisAlignment.CENTER,
+        controls=[control]
     )

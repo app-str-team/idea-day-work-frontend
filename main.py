@@ -1,5 +1,6 @@
 from flet import *
 import os, importlib.util
+from controls import IdeaDayApp
 
 
 global _moduledList
@@ -22,7 +23,7 @@ def main(page:Page):
     page.title = 'Idea-Day CB India'
 
     page.views.append(
-        _moduleList['/login'].loader.load_module()._view_()
+        _moduleList['/login'].loader.load_module()._view_(page)
     )
 
     page.go("/home")
