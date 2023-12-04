@@ -32,4 +32,4 @@ def main(page:Page):
 
 
 if __name__ == '__main__':
-    app(target=main)
+    app(target=main,view=AppView.WEB_BROWSER)

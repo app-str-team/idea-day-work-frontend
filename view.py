@@ -6,6 +6,7 @@ from main import _moduleList
 from datetime import datetime
 import os
 import json
+import requests
 
 __location__ = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__)))
@@ -33,13 +34,13 @@ def ChangeRoute(e, page_route):
 
     if page_route == "/register":
         e.page.views.append(
-            _moduleList[page_route].loader.load_module()._view_()
+            _moduleList[page_route].loader.load_module()._view_(e.page)
         )
         e.page.go("/register")
 
     if page_route == "/login":
         e.page.views.append(
-            _moduleList[page_route].loader.load_module()._view_()
+            _moduleList[page_route].loader.load_module()._view_(e.page)
         )
         e.page.go("/login")
         # e.page.go("/register")
@@ -64,11 +65,22 @@ def RegisterUser(e):
                     res.controls[2].content.value,
                     res.controls[3].content.value,
                 )
+              
                 # use firebase auth API to signUp a new User with email and Pass
                 auth.create_user_with_email_and_password(
                     res.controls[2].content.value,
                     res.controls[3].content.value,
                 )
+                
+                '''
+                resp = requests.post(url="http://127.0.0.1:5000/createuser",
+                         json={
+                               "email":"viv@gmail.com", 
+                               "password":"P@$$w0rd",
+                               "display_name":"vivek vardhan",
+                              },
+                         headers={"Content-Type":"application/json"})
+                '''
                 
                 data = {
                     "firstName" : res.controls[0].content.value,
@@ -105,10 +117,10 @@ def ShowMenu(e):
 # logIn in App
 def logInUser(e):
     print("Inside LoginUser")
-    first_name, last_name = GetUserDetail(e)
-    print(first_name, last_name)
+    display_name, uid = GetUserDetail(e)
+    print(display_name, display_name)
 
-    if first_name != None and last_name != None:
+    if display_name != None and uid != None:
         e.page.views.clear()
         e.page.views.append( _moduleList['/home'].loader.load_module()._view_(e.page) )
         e.page.go('/home')
@@ -131,13 +143,27 @@ def GetUserDetail(e):
             res = page.controls[0].controls[0].content.controls[4]
             try:
                 # here we autheticate the user using email & pass
+                '''
                 user = auth.sign_in_with_email_and_password(
                     res.controls[0].content.value,
                     res.controls[1].content.value,
                 )
-
+                '''
+                resp = requests.post(url="http://127.0.0.1:5000/signin",
+                         json={
+                               "email":res.controls[0].content.value, 
+                               "password":res.controls[1].content.value
+                              },
+                         headers={"Content-Type":"application/json"})
+                
+                user = {'displayName': resp.json()['displayName'], 
+                        'uid': resp.json()['localId'] ,
+                        'idToken': resp.json()['idToken']}
+                
                 SESSION["users"] = user
 
+                return user['displayName'], user['uid']
+                '''
                 val = db.child("users").get()
                 print(val)
 
@@ -150,11 +176,12 @@ def GetUserDetail(e):
                         SESSION["lastName"] = last_name   
                         
                         return [first_name, last_name]
-
+                '''
             except Exception as ex:
                 print(ex)
-    print("No matching Email...")
+    #print("No matching Email...")
     return [None, None]
+      
 
 # This function is for to post the judges comments on firebase.
 def PostJudgeScore(e):
