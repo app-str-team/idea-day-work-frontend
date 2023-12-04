@@ -53,7 +53,7 @@ def _view_(page : Page):
 
                                 inputTextField.SignInOption( "POST JUDGEMENT", lambda e: PostJudgeScore(e)),
                                 Divider(height=5, color="transparent"),
-                                inputTextField.SignInOption( "BCAK", lambda e: homePage(e)),
+                                inputTextField.SignInOption( "BACK", lambda e: homePage(e)),
                                 Divider(height=5, color="transparent"),
                             ],
                         ),

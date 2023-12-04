@@ -73,7 +73,7 @@ def _view_(page : Page):
                                         Container(
                                             on_click= lambda e: ChangeRoute(e, "/register"),
                                             content=Text(
-                                                "Sign In",
+                                                "Sign Up",
                                                 color="blue900",
                                                 size=10,
                                                 weight="bold",

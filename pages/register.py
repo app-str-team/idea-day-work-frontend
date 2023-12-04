@@ -39,8 +39,8 @@ def _view_(page : Page):
                                 Column(
                                     spacing=5,
                                     controls=[
-                                        inputText.InputetextField("First Name", False,False),
-                                        inputText.InputetextField("Last Name", False,False),
+                                        #inputText.InputetextField("First Name", False,False),
+                                        inputText.InputetextField("Display Name", False,False),
                                         inputText.InputetextField("Email", False,False),
                                         inputText.InputetextField("Password", True,True),
                                     ],

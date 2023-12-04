@@ -1,6 +1,7 @@
 import flet
 from flet import *
 import requests
+from main import _moduleList
 
 class IdeaDayTeam(UserControl):
     def loadTeam(self):
@@ -12,7 +13,13 @@ class IdeaDayTeam(UserControl):
             step.controls[2].visible = False
 
             step.update()
-
+        def on_submit_opinion_clicked(e):
+            print ("on_submit_opinion_clicked")
+            e.page.views.clear()
+            e.page.views.append(
+            _moduleList['/postComments'].loader.load_module()._view_(e.page))
+            e.page.update()
+            
         return Column(controls=[
             Container(
                 width=300,
@@ -115,6 +122,7 @@ class IdeaDayTeam(UserControl):
                     "Submit your vote here",
                     width=300,
                     height=40,
+                    on_click=on_submit_opinion_clicked,
                     style=ButtonStyle(
                         bgcolor=colors.BLACK,
                         color=colors.WHITE,

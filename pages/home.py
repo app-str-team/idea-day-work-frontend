@@ -49,8 +49,7 @@ def _view_(page : Page):
             ),
         ],
     )
-'''   
-
+ '''
 def _view_(page : Page):
     control = IdeaDayApp.IdeaDayApp()
     page.add(control)

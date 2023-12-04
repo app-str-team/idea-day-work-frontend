@@ -1,9 +1,19 @@
 import flet
 from flet import *
 from controls import IdeaDayTeam
+from main import _moduleList
+from controls  import IdeaDayApp
 
 import requests
 
+
+def get_idea_id(idea_category:str, tooltip : int):
+    print("idea_category = ", idea_category)
+    print("tooltip = ", tooltip)
+    tool_tips = IdeaDayApp.tool_tip_keeper[idea_category]
+    selected_ideaID = tool_tips[tooltip]
+    print(selected_ideaID)
+    
 class IdeaDayCategory(UserControl):
     # def __init__(self, task_name, start):
     #     super().__init__()
@@ -41,13 +51,14 @@ class IdeaDayCategory(UserControl):
 
     def example(self):
         def on_click(e):
+            print ("e =", e.__dict__)
             step = e.page.controls[0].controls[0].controls[0]
             step.controls[0].visible = False
             step.controls[1].visible = False
             IdeaDayParameter = []
             if(step.controls[2].controls != []):
                 step.controls[2].controls.pop()
-            if (e.control.data == "techbiz"):
+            if (e.control.data == "techbiz_category"):
                 IdeaDayParameter = IdeaDayCategory.techBiz_Task_List[e.control.tooltip]
             if (e.control.data == "visionary_champs"):
                 IdeaDayParameter = IdeaDayCategory.productInnovation_Task_List[e.control.tooltip]
@@ -63,6 +74,8 @@ class IdeaDayCategory(UserControl):
             print(
                 "I am working"
             )
+            print ("e.control.data = ", e.control.data)
+            ideaID = get_idea_id(e.control.data, e.control.tooltip);
             e.page.update()
 
         images = flet.GridView(

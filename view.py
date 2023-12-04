@@ -1,13 +1,14 @@
 # import pyrebase
-import firebase
+#import firebase
 # from collections.abc import Mapping
 from flet import *
 from main import _moduleList
 from datetime import datetime
-import os
+#import os
 import json
 import requests
 
+'''
 __location__ = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__)))
 config_file = os.path.join(__location__, 'connectionstring.json')
@@ -18,14 +19,15 @@ with open(config_file, 'r') as f:
     CONFIG = json.load(f)
     
 print(CONFIG)
-
+'''
 global SESSION
 SESSION = {}
 
+'''
 firebase = firebase.initialize_app(CONFIG)
 auth = firebase.auth()
 db = firebase.database()
-
+'''
 
 
 def ChangeRoute(e, page_route):
@@ -60,40 +62,37 @@ def RegisterUser(e):
     for page in e.page.views[:]:
         if page.route == "/register":
             res = page.controls[0].controls[0].content.controls[4]
-            try:
-                print(
-                    res.controls[2].content.value,
-                    res.controls[3].content.value,
-                )
-              
+            try:              
+                '''
                 # use firebase auth API to signUp a new User with email and Pass
                 auth.create_user_with_email_and_password(
                     res.controls[2].content.value,
                     res.controls[3].content.value,
                 )
-                
                 '''
                 resp = requests.post(url="http://127.0.0.1:5000/createuser",
                          json={
-                               "email":"viv@gmail.com", 
-                               "password":"P@$$w0rd",
-                               "display_name":"vivek vardhan",
+                               "display_name":res.controls[0].content.value,
+                               "email":res.controls[1].content.value, 
+                               "password":res.controls[2].content.value
+,
                               },
                          headers={"Content-Type":"application/json"})
-                '''
                 
+                print("resp =", resp.json() )
+                
+                '''
                 data = {
                     "firstName" : res.controls[0].content.value,
                     "lastName" : res.controls[1].content.value,
                     "email" : res.controls[2].content.value,
                     "password" : res.controls[3].content.value,
                 }
-
                 db.child("users").push(data)
-
+                '''
                 e.page.views.clear()
                 e.page.views.append(
-                _moduleList['/login'].loader.load_module()._view_())
+                _moduleList['/login'].loader.load_module()._view_(e.page))
                 e.page.update()
 
             except Exception as ex:
@@ -158,7 +157,10 @@ def GetUserDetail(e):
                 
                 user = {'displayName': resp.json()['displayName'], 
                         'uid': resp.json()['localId'] ,
-                        'idToken': resp.json()['idToken']}
+                        'idToken': resp.json()['idToken'],
+                        'userRole':resp.json()['userRole'] }
+                
+                print("userRole =", resp.json()['userRole'])
                 
                 SESSION["users"] = user
 
@@ -219,7 +221,7 @@ def PostJudgeScore(e):
 
 def homePage(e):
         e.page.views.clear()
-        e.page.views.append( _moduleList['/home'].loader.load_module()._view_() )
+        e.page.views.append( _moduleList['/home'].loader.load_module()._view_(e.page) )
         e.page.go('/home')
         e.page.update()
   

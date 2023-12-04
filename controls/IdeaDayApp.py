@@ -2,10 +2,11 @@ import flet
 from flet import *
 from controls import IdeaDayCategory
 from controls import IdeaDayTeam
-#from controls import getDataFromFirebase
 import requests
 import json
 
+
+tool_tip_keeper = {} 
 
 class IdeaDayApp(UserControl):
     def build(self):
@@ -20,7 +21,7 @@ class IdeaDayApp(UserControl):
         indexefficiency_champs = 0
         indexcustomer_delight = 0
         for ideaItem in str_ideaList.json():
-            if(ideaItem["category"] == "techbiz"): #techbiz_category
+            if(ideaItem["category"] == "techbiz_category"): #techbiz_category
                 ideaSingle = []
                 ideaSingle.append(ideaItem["ImageUrl"] + str(ideaItem["ID"]))
                 ideaSingle.append(ideaItem["TeamName"])
@@ -30,6 +31,11 @@ class IdeaDayApp(UserControl):
                 ideaSingle.append(ideaItem["Summary"])
                 ideaSingle.append(ideaItem["category"])
                 listTECHBIZCATEGORY.append(ideaSingle) #str(ideaItem["Id"]))
+                if (ideaItem["category"] not in tool_tip_keeper.keys()):
+                    tool_tip_keeper[ideaItem["category"]] = {indextechbiz:ideaItem["ID"]}
+                else:
+                    existing_tool_tips = tool_tip_keeper[ideaItem["category"]]
+                    existing_tool_tips.update({indextechbiz:ideaItem["ID"]})
                 indextechbiz = indextechbiz + 1
             if (ideaItem["category"] == "visionary_champs"): #Product Innovation
                 ideaSingle = []
@@ -41,6 +47,11 @@ class IdeaDayApp(UserControl):
                 ideaSingle.append(ideaItem["Summary"])
                 ideaSingle.append(ideaItem["category"])
                 listPRODUCTINNOVATION.append(ideaSingle) #str(ideaItem["Id"]))
+                if (ideaItem["category"] not in tool_tip_keeper.keys()):
+                    tool_tip_keeper[ideaItem["category"]] = {indexvisionary_champs:ideaItem["ID"]}
+                else:
+                    existing_tool_tips = tool_tip_keeper[ideaItem["category"]]
+                    existing_tool_tips.update({indexvisionary_champs:ideaItem["ID"]})
                 indexvisionary_champs = indexvisionary_champs + 1
             if (ideaItem["category"] == "efficiency_champs"): #process_innovation
                 ideaSingle = []
@@ -52,7 +63,13 @@ class IdeaDayApp(UserControl):
                 ideaSingle.append(ideaItem["Summary"])
                 ideaSingle.append(ideaItem["category"])
                 listPROCESSINNOVATION.append(ideaSingle) #str(ideaItem["Id"]))
+                if (ideaItem["category"] not in tool_tip_keeper.keys()):
+                    tool_tip_keeper[ideaItem["category"]] = {indexefficiency_champs:ideaItem["ID"]}
+                else:
+                    existing_tool_tips = tool_tip_keeper[ideaItem["category"]]
+                    existing_tool_tips.update({indexefficiency_champs:ideaItem["ID"]})
                 indexefficiency_champs = indexefficiency_champs + 1
+                
             if (ideaItem["category"] == "customer_delight"): #customer_delight
                 ideaSingle = []
                 ideaSingle.append(ideaItem["ImageUrl"] + str(ideaItem["Id"]))
@@ -63,10 +80,12 @@ class IdeaDayApp(UserControl):
                 ideaSingle.append(ideaItem["Summery"])
                 ideaSingle.append(ideaItem["category"])
                 listCUSTOMERDELIGHT.append(ideaSingle) #str(ideaItem["Id"]))
+                if (ideaItem["category"] not in tool_tip_keeper.keys()):
+                    tool_tip_keeper[ideaItem["category"]] = {indexcustomer_delight:ideaItem["Id"]}
+                else:
+                    existing_tool_tips = tool_tip_keeper[ideaItem["category"]]
+                    existing_tool_tips.update({indexcustomer_delight:ideaItem["Id"]})                
                 indexcustomer_delight = indexcustomer_delight + 1
-
-
-
 
         #taskPRODUCTINNOVATION = self.IdeaDayTeam("PRODUCTINNOVATION")
         taskTECHBIZCATEGORY = IdeaDayCategory.IdeaDayCategory("TECHBIZ CATEGORY",listTECHBIZCATEGORY)
