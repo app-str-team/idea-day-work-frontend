@@ -112,6 +112,7 @@ class IdeaDayCategory(UserControl):
                             fit=flet.ImageFit.NONE,
                             repeat=flet.ImageRepeat.NO_REPEAT,
                             border_radius=flet.border_radius.all(10),
+                            opacity=0.2
                         ),
                         flet.Row(
                             [

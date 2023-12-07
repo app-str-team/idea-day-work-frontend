@@ -5,6 +5,7 @@ from main import _moduleList
 from common import usersession
 
 class IdeaDayTeam(UserControl):
+    
     def loadTeam(self):
         names = self.TeadData[3]
         def on_backarrow_clicked(e):
@@ -24,12 +25,15 @@ class IdeaDayTeam(UserControl):
                 pass
             e.page.update()
             
+        def myscroll(e: OnScrollEvent):
+            print(e)
+            
         return Column(controls=[
             Container(
                 width=300,
                 content=Text(
                     self.TeadData[1],
-                    size=30,
+                    size=20,
                     color="#000000",
                     weight="w700",
                     text_align="center",
@@ -42,6 +46,8 @@ class IdeaDayTeam(UserControl):
                 border_radius=10,
                 padding=10,
                 content=Column(
+                    auto_scroll=True,
+                    scroll = 'ADAPTIVE',
                     controls=[
                         Text(
                             "Synopsis",
@@ -54,8 +60,10 @@ class IdeaDayTeam(UserControl):
                             self.TeadData[4],
                             size=12,
                             color="#333333",
-                            text_align="LEFT"
-                        ),
+                            text_align="LEFT",
+                            max_lines=2,
+                            overflow="ellipsis"
+                        ),            
                     ]
                 )
             ),
@@ -67,6 +75,7 @@ class IdeaDayTeam(UserControl):
                 border_radius=10,
                 padding=10,
                 content=Column(
+                    scroll = 'ADAPTIVE',
                     controls=[
                         Text(
                             "Video Link",
@@ -95,6 +104,7 @@ class IdeaDayTeam(UserControl):
                 border_radius=10,
                 padding=10,
                 content=Column(
+                    scroll = 'ALWAYS',
                     controls=[
                         Text(
                             "Team Members",
@@ -150,7 +160,9 @@ class IdeaDayTeam(UserControl):
                 bgcolor=colors.TEAL,
                 padding=5,
             )],
-            scroll=ScrollMode.ALWAYS
+            scroll=ScrollMode.ALWAYS,
+            on_scroll_interval=0,
+            on_scroll=myscroll
         )
     def __init__(self, task_name):
         super().__init__()

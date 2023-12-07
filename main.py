@@ -1,6 +1,7 @@
 from flet import *
 import os, importlib.util
-from controls import IdeaDayApp
+#from controls import IdeaDayApp
+from controls import animationcontrol
 
 
 global _moduledList
@@ -21,11 +22,15 @@ for _, dirs, __ in os.walk(r'./'):
 
 def main(page:Page):
     page.title = 'Idea-Day CB India'
-
+    page.scroll= ScrollMode.ALWAYS
+    
+    anamie = animationcontrol.AnimationControl(page).build()
+    page.clean()
+    
     page.views.append(
         _moduleList['/login'].loader.load_module()._view_(page)
     )
-
+   
     page.go("/home")
     page.update()
     pass
